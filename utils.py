@@ -34,5 +34,13 @@ def xor_operation(x,y):
             res+='1'
     return res
 
+def change_m(msg,iv):
+    msg_len=len(msg)
+    iv_len=len(iv)
+    remainder=msg_len%iv_len
+    if remainder!=0:
+        msg=msg.zfill(msg_len+(iv_len-remainder))
+    return msg
+
 if __name__=="__main__":
     print(xor_operation("1010","0000"))
