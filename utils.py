@@ -1,5 +1,9 @@
-G=13
-P=47
+G=3
+H=7
+P=43649
+# n is the number of bits in P
+n=len(bin(P).replace('0b', ''))
+
 SEEDSIZE=16
 import random
 
@@ -147,6 +151,43 @@ def verify_mac(text,mac_length,k):
     text_mac=text[-1*mac_length:]
     return mac_output==text_mac
 
+def fixed_hash(x1,x2):
+    x1_int=int(x1,2);x2_int=int(x2,2)
+    res1=pow(G,x1_int,P)
+    res2=pow(H,x2_int,P)
+    result=(res1*res2)%P
+    result_bin=dec_to_bin(result)
+    result_bin=result_bin.zfill(n)
+    print("f_hash:",result_bin)
+    return result_bin
+
+iv='0'*n
+def var_hash(msg,iv):
+    block_size=len(dec_to_bin(P))
+    len_msg=len(msg)
+    len_msg_block=dec_to_bin(len_msg).zfill(block_size)
+    extra=len_msg%block_length
+    msg=msg.zfill(len_msg+extra)
+    msg=msg+len_msg_block
+    no_of_blocks=len(msg)//block_size
+    for i in range(no_of_blocks):
+        input_block=msg[i*block_size:(i+1)*block_size]
+        iv=fixed_hash(iv,input_block)
+    return iv
+
+def hmac(msg,k):
+    k=k.zfill(n)
+    ipad=bin(0x5c).replace('0b','').zfill(n)
+    opad=bin(0x36).replace('0b','').zfill(n)
+    k_xor_ipad=xor_operation(k, ipad)
+    k_xor_opad=xor_operation(k, opad)
+    iv='0'*n
+    output_fixed_hash_ipad=fixed_hash(k_xor_ipad, iv)
+    output_fixed_hash_opad=fixed_hash(k_xor_opad, iv)
+    output_var_hash=var_hash(msg, output_fixed_hash_ipad)
+    hmac_val=fixed_hash(output_var_hash, output_fixed_hash_opad)
+    return hmac_val
+
 if __name__=="__main__":
     iv=rand_key(SEEDSIZE)
     k=rand_key(SEEDSIZE)    
@@ -165,9 +206,16 @@ if __name__=="__main__":
     
     
     # cca secure
-    m=input("enter msg: ")
-    # here k is sent only for length purpose
-    m=change_m(m,k) 
-    print(cbc_mac(m, block_length,k))
-    cca_output=cca_secure(m,iv,block_length,k)
-    print(verify_mac(cca_output, block_length,k))
+    # m=input("enter msg: ")
+    # # here k is sent only for length purpose
+    # m=change_m(m,k) 
+    # print(cbc_mac(m, block_length,k))
+    # cca_output=cca_secure(m,iv,block_length,k)
+    # print(verify_mac(cca_output, block_length,k))
+    
+    
+    # hmac
+    # print(fixed_hash('1010111101010101', '1011011101110110'))
+    msg=input("enter msg: ")
+    # print(var_hash(msg))
+    print(hmac(msg, '101010'))
