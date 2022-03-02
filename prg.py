@@ -1,4 +1,3 @@
-from utils import dec_to_bin,SEEDSIZE,G,P
 def hardcore_predicate(s):
     # returning the MSB
     # return s[0]
