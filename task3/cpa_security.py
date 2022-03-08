@@ -86,7 +86,7 @@ def change_m(msg,iv):
         msg=msg.zfill(msg_len+(iv_len-remainder))
     return msg
 
-
+# task 3
 # one encryptor, one decryptor
 def output_feedback_encrypt(iv,m,k):
     no_of_blocks=len(m)//len(iv)

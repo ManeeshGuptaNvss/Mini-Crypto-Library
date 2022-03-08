@@ -36,6 +36,6 @@ def prg(x,length=SEEDSIZE):
     
 
 if __name__=="__main__":
-    print(prg(dec_to_bin(2)))
-    print(prg(dec_to_bin(13)))
+    x=int(input("enter initial seed:"))
+    print("PRG:",prg(dec_to_bin(x)))
  

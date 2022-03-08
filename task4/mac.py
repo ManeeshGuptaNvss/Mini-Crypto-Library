@@ -141,7 +141,8 @@ def cbc_mac(m,block_length,k):
 if __name__=="__main__":
     m=input("enter msg: ")
     # here k is sent only for length purpose
-    m=change_m(m,k) 
+    m=change_m(m,k)     
+    block_length=len(k)
     print(cbc_mac(m, block_length,k))
     # cca_output=cca_secure(m,iv,block_length,k)
     # print(verify_mac(cca_output, block_length,k))
