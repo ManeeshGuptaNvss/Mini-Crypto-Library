@@ -1,10 +1,17 @@
+SEEDSIZE=16
+G=3
+H=7
+P=43649
+def dec_to_bin(x):
+    return bin(x).replace('0b','')
 def hardcore_predicate(s):
     # returning the MSB
     # return s[0]
-    res=0
-    for i in range(len(s)):
-        res^=ord(s[i])-ord('0')
-    return str(res)
+    int_s=int(s,2)
+    if(int_s<P/2):
+        return '0'
+    else:
+        return '1'
 
 def one_way_function(x):
     int_x=int(x,2)
@@ -28,11 +35,7 @@ def prg(x,length=SEEDSIZE):
     return output
     
 
-# print(function_G('1000'))
-# print(function_G('100'))
-# print(function_G('10'))
 if __name__=="__main__":
     print(prg(dec_to_bin(2)))
     print(prg(dec_to_bin(13)))
-# fk('011')=
  
