@@ -1,4 +1,3 @@
-import random
 SEEDSIZE=16
 G=3
 H=7
@@ -66,18 +65,6 @@ def prf(k,x):
         # print(prg_output,prg_input)
     return prg_input       
 
-def rand_key(n):
-    key1=""
-    for i in range(n):
-        temp = str(random.randint(0, 1))
-        key1 += temp
-    return(key1)
-
-iv=rand_key(SEEDSIZE)
-# m=rand_key(4*SEEDSIZE)
-
-k=rand_key(SEEDSIZE)
-
 def change_m(msg,iv):
     msg_len=len(msg)
     iv_len=len(iv)
@@ -121,11 +108,6 @@ def verify(plain_text,m):
 def cpa_secure(iv,m,k):
     return iv+output_feedback_encrypt(iv, m,k)
 
-block_length=SEEDSIZE
-k=rand_key(SEEDSIZE)
-iv=rand_key(SEEDSIZE)
-
-# task 5
 def cbc_mac(m,block_length,k):
     msg_length=len(m)
     no_of_blocks=msg_length//block_length
@@ -135,9 +117,10 @@ def cbc_mac(m,block_length,k):
     for i in range(no_of_blocks):
         msg_i=m[i*block_length:(i+1)*block_length]
         xor_value=xor_operation(iv,msg_i)
-        prf_input=prf(k,xor_value)
-    return prf_input
+        iv=prf(k,xor_value)
+    return iv
 
+# task 5
 def cca_secure(m,iv,block_length,k):
     cpa_output=cpa_secure(iv, m,k)
     cbc_mac_value=cbc_mac(cpa_output,block_length,k)
@@ -151,7 +134,10 @@ def verify_mac(text,mac_length,k):
 if __name__=="__main__":
     m=input("enter msg: ")
     # here k is sent only for length purpose
-    m=change_m(m,k) 
-    print(cbc_mac(m, block_length,k))
+    k=input("Enter k in 16-bits:")
+    m=change_m(m,k)     
+    iv=input("Enter an iv in 16-bits:")
+    block_length=len(k) 
+    print("CBC_MAC: ",cbc_mac(m, block_length,k))
     cca_output=cca_secure(m,iv,block_length,k)
     print(verify_mac(cca_output, block_length,k))

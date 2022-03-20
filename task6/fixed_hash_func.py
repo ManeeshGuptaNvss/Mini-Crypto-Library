@@ -137,8 +137,8 @@ def cbc_mac(m,block_length,k):
     for i in range(no_of_blocks):
         msg_i=m[i*block_length:(i+1)*block_length]
         xor_value=xor_operation(iv,msg_i)
-        prf_input=prf(k,xor_value)
-    return prf_input
+        iv=prf(k,xor_value)
+    return iv
 
 def cca_secure(m,iv,block_length,k):
     cpa_output=cpa_secure(iv, m,k)
@@ -153,19 +153,15 @@ def verify_mac(text,mac_length,k):
 # task 6
 def fixed_hash(x1,x2):
     x1_int=int(x1,2);x2_int=int(x2,2)
+    print("x1",x1_int,"x2",x2_int)
     res1=pow(G,x1_int,P)
     res2=pow(H,x2_int,P)
     result=(res1*res2)%P
     result_bin=dec_to_bin(result)
     result_bin=result_bin.zfill(n)
-    # print("f_hash:",result_bin)
     return result_bin
 
 if __name__=="__main__":
-    m=input("enter msg: ")
-    # here k is sent only for length purpose
-    # m=change_m(m,k) 
-    # print(cbc_mac(m, block_length,k))
-    # cca_output=cca_secure(m,iv,block_length,k)
-    # print(verify_mac(cca_output, block_length,k))
-    print(fixed_hash('1010111101010101', '1011011101110110'))
+    x1=input("Enter x1 less than P: ")
+    x2=input("Enter x2 less than P: ")
+    print(fixed_hash(x1,x2))

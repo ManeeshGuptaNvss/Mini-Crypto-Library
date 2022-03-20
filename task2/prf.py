@@ -43,13 +43,12 @@ def prf(k,x):
     prg_input=k
     for i in x:
         prg_output=prg(prg_input,2*len(prg_input))
-        # print('G(K)',i)
         if(i=='0'):
             prg_input=prg_output[:len(prg_output)//2]
         else:
             prg_input=prg_output[len(prg_output)//2:]
-        # print(prg_output,prg_input)
+        print('x_bit:',i,"output:",prg_output,"chosen half:",prg_input)
     return prg_input       
 
 if __name__=="__main__":
-    print(prf('100','111')) 
+    print(prf('111010','110111')) 

@@ -75,11 +75,6 @@ def rand_key(n):
         key1 += temp
     return(key1)
 
-iv=rand_key(SEEDSIZE)
-# m=rand_key(4*SEEDSIZE)
-
-k=rand_key(SEEDSIZE)
-
 def change_m(msg,iv):
     msg_len=len(msg)
     iv_len=len(iv)
@@ -123,10 +118,6 @@ def verify(plain_text,m):
 def cpa_secure(iv,m,k):
     return iv+output_feedback_encrypt(iv, m,k)
 
-block_length=SEEDSIZE
-k=rand_key(SEEDSIZE)
-iv=rand_key(SEEDSIZE)
-
 # task 5
 def cbc_mac(m,block_length,k):
     msg_length=len(m)
@@ -137,8 +128,8 @@ def cbc_mac(m,block_length,k):
     for i in range(no_of_blocks):
         msg_i=m[i*block_length:(i+1)*block_length]
         xor_value=xor_operation(iv,msg_i)
-        prf_input=prf(k,xor_value)
-    return prf_input
+        iv=prf(k,xor_value)
+    return iv
 
 def cca_secure(m,iv,block_length,k):
     cpa_output=cpa_secure(iv, m,k)
@@ -158,16 +149,17 @@ def fixed_hash(x1,x2):
     result=(res1*res2)%P
     result_bin=dec_to_bin(result)
     result_bin=result_bin.zfill(n)
-    # print("f_hash:",result_bin)
     return result_bin
 
 # task 7
+# here iv is a fixed constant
+# any value of iv with length equal to n should be taken
 iv='0'*n
 def var_hash(msg,iv):
     block_size=n
     len_msg=len(msg)
     len_msg_block=dec_to_bin(len_msg).zfill(block_size)
-    extra=len_msg%block_length
+    extra=len_msg%n
     msg=msg.zfill(len_msg+extra)
     msg=msg+len_msg_block
     no_of_blocks=len(msg)//block_size
@@ -178,4 +170,4 @@ def var_hash(msg,iv):
 
 if __name__=="__main__":
     msg=input("enter msg: ")
-    print(var_hash(msg,iv))
+    print("Variable Hash:",var_hash(msg,iv))

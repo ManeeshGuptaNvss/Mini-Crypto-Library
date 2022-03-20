@@ -30,8 +30,9 @@ def prg(x,length=SEEDSIZE):
     for i in range(length):
         g_of_x=function_G(x)
         output+=g_of_x[-1]
+        print("hard core bit:",g_of_x[-1])
         x=g_of_x[:-1]
-        # print("x",x)
+        print("x",x)
     return output
     
 

@@ -87,23 +87,19 @@ def change_m(msg,iv):
     return msg
 
 # task 3
-# one encryptor, one decryptor
 def output_feedback_encrypt(iv,m,k):
     no_of_blocks=len(m)//len(iv)
     block_length=len(iv)
-    # iv_int=int(iv,2)
     cipher_text=""
     for i in range(no_of_blocks):
+        print("iteration",i+1)
         m_i=m[block_length*i:block_length*(i+1)]
-        # print(m_i,x)
-        # m_i_int=int(m_i,2)
         iv=prf(k,iv)
+        print("PRF output:",iv,"message block:",m_i)
         cipher_text+=xor_operation(iv,m_i)
     print("cipher text",cipher_text)    
     return cipher_text
-        # prf(k,prf_input)
 
-   
 def output_feedback_decrypt(iv,cipher,k):
     no_of_blocks=len(cipher)//len(iv)
     block_length=len(iv)
@@ -122,8 +118,9 @@ def cpa_secure(iv,m,k):
     return iv+output_feedback_encrypt(iv, m,k)
 
 if __name__=="__main__":
-    m=input()
+    m=input("Enter plain text:")
     print(m,len(m))
+    iv=input("Enter any 16-bit iv:")
     m=change_m(m, iv)
     print(m,len(m))
     cipher_text=output_feedback_encrypt(iv,m,k)  
